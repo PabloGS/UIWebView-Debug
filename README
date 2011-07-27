@@ -1,0 +1,32 @@
+UIWebView+Debug
+======
+
+UIWebView+Debug adds simple script debugging capabilities to Apple's UIWebView.
+
+Usage:
+
+Simply add the two files to your Project.
+#import "WebView+Debug.h"
+
+Next adapt the header file to enable or disable parser call backs.
+
+Make sure to not include this in your release build of the application as it uses private Frameworks.
+
+The DEBUG defines should sort this out for you. If this code is left in, Apple will the application.
+
+
+Credits
+======
+This little UIWebView Category was inspired by this Stack Overflow post:
+http://stackoverflow.com/questions/193119/
+
+Credits go to Robert Sanders and Kresimir Prcela for giving the right clues.
+I then decided to take these two posts and merge them into one easy to use drop-in category.
+
+Cheers,
+
+Pablo Guillen
+
+License
+======
+The software is licensed under the MIT License.
