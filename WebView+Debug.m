@@ -7,40 +7,52 @@
 //
 
 #ifdef DEBUG
+
 #import "WebView+Debug.h"
+
 @class WebView;
 @class WebFrame;
 @class WebScriptCallFrame;
 
+#pragma mark -
+
 @interface ScriptDebuggerDelegate : NSObject
+
 -(id)functionNameForFrame:(WebScriptCallFrame*)frame;
 -(id)callerForFrame:(WebScriptCallFrame*)frame;
 -(id)exceptionForFrame:(WebScriptCallFrame*)frame;
+
 @end
 
+#pragma mark -
+
 @implementation ScriptDebuggerDelegate
+
 // We only have access to the public methods declared in the header / class
 // The private methods can also be accessed but raise a warning.
 // Use runtime selectors to suppress warnings 
--(id)functionNameForFrame:(WebScriptCallFrame*)frame{
+
+-(id)functionNameForFrame:(WebScriptCallFrame*)frame {
     SEL functionNameSelector = @selector(functionName);
     return [frame performSelector:functionNameSelector];
 }
--(id)callerForFrame:(WebScriptCallFrame*)frame{
+
+-(id)callerForFrame:(WebScriptCallFrame*)frame {
     SEL callerSelector = @selector(caller);
     return [frame performSelector:callerSelector];
 }
--(id)exceptionForFrame:(WebScriptCallFrame*)frame{
+
+-(id)exceptionForFrame:(WebScriptCallFrame*)frame {
     SEL exceptionSelector = @selector(exception);
-    return [frame performSelector:exceptionSelector];
-    
+    return [frame performSelector:exceptionSelector];    
 }
+
 - (void)webView:(WebView *)webView      didParseSource:(NSString *)source
  baseLineNumber:(unsigned)lineNumber
         fromURL:(NSURL *)url
        sourceId:(int)sid
-    forWebFrame:(WebFrame *)webFrame{
-    if(kDidParseSource)
+    forWebFrame:(WebFrame *)webFrame {
+    if (kDidParseSource)
         NSLog(@"ScriptDebugger called didParseSource: \nsourceId=%d, \nurl=%@", sid, url);
 }
 
@@ -49,9 +61,8 @@
  baseLineNumber:(unsigned)lineNumber
         fromURL:(NSURL *)url
       withError:(NSError *)error
-    forWebFrame:(WebFrame *)webFrame
-{
-    if(kFailedToParseSource)
+    forWebFrame:(WebFrame *)webFrame {
+    if (kFailedToParseSource)
         NSLog(@"ScriptDebugger called failedToParseSource:\
               \nurl=%@ \nline=%d \nerror=%@ \nsource=%@",
               url, lineNumber, error, source);
@@ -61,7 +72,7 @@
        sourceId:(int)sid
            line:(int)lineno
     forWebFrame:(WebFrame *)webFrame {
-    if(kExceptionWasRaised)
+    if (kExceptionWasRaised)
         NSLog(@"ScriptDebugger exception:\
               \nsourceId=%d \nline=%d \nfunction=%@, \ncaller=%@, \nexception=%@", 
               sid,
@@ -75,8 +86,8 @@
 - (void)webView:(WebView *)webView    didEnterCallFrame:(WebScriptCallFrame *)frame
        sourceId:(int)sid
            line:(int)lineno
-    forWebFrame:(WebFrame *)webFrame{
-    if(kDidEnterCallFrame)
+    forWebFrame:(WebFrame *)webFrame {
+    if (kDidEnterCallFrame)
         NSLog(@"ScriptDebugger didEnterCallFrame:\
               \nsourceId=%d \nline=%d \nfunction=%@, \ncaller=%@, \nexception=%@", 
               sid, 
@@ -90,8 +101,8 @@
 - (void)webView:(WebView *)webView willExecuteStatement:(WebScriptCallFrame *)frame
        sourceId:(int)sid
            line:(int)lineno
-    forWebFrame:(WebFrame *)webFrame{
-    if(kWillExecuteStatement)
+    forWebFrame:(WebFrame *)webFrame {
+    if (kWillExecuteStatement)
         NSLog(@"ScriptDebugger willExecuteStatement:\
               \nsourceId=%d \nline=%d \nfunction=%@, \ncaller=%@, \nexception=%@", 
               sid, 
@@ -105,8 +116,8 @@
 - (void)webView:(WebView *)webView   willLeaveCallFrame:(WebScriptCallFrame *)frame
        sourceId:(int)sid
            line:(int)lineno
-    forWebFrame:(WebFrame *)webFrame{
-    if(kWillLeaveCallFrame)
+    forWebFrame:(WebFrame *)webFrame {
+    if (kWillLeaveCallFrame)
         NSLog(@"ScriptDebugger willLeaveCallFrame:\
               \nsourceId=%d \nline=%d \nfunction=%@, \ncaller=%@, \nexception=%@", 
               sid, 
@@ -115,17 +126,26 @@
               [self callerForFrame:frame], 
               [self exceptionForFrame:frame]);
 }
+
 @end
+
+#pragma mark -
 
 @interface UIWebView ()
+
 -(id)setScriptDebugDelegate:(id)delegate;
+
 @end
+
+#pragma mark -
 
 @implementation UIWebView (DebugCategory)
-- (void)webView:(id)sender didClearWindowObject:(id)windowObject forFrame:(WebFrame*)frame{
+
+- (void)webView:(id)sender didClearWindowObject:(id)windowObject 
+		forFrame:(WebFrame*)frame {
     [sender setScriptDebugDelegate:[[ScriptDebuggerDelegate alloc] init]];
 }
+
 @end
+
 #endif
-
-
