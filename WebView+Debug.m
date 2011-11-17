@@ -32,20 +32,25 @@
 // The private methods can also be accessed but raise a warning.
 // Use runtime selectors to suppress warnings 
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
 -(id)functionNameForFrame:(WebScriptCallFrame*)frame {
     SEL functionNameSelector = @selector(functionName);
-    return [frame performSelector:functionNameSelector];
+    return [(id)frame performSelector:functionNameSelector];
 }
 
 -(id)callerForFrame:(WebScriptCallFrame*)frame {
     SEL callerSelector = @selector(caller);
-    return [frame performSelector:callerSelector];
+    return [(id)frame performSelector:callerSelector];
 }
 
 -(id)exceptionForFrame:(WebScriptCallFrame*)frame {
     SEL exceptionSelector = @selector(exception);
-    return [frame performSelector:exceptionSelector];    
+    return [(id)frame performSelector:exceptionSelector];    
 }
+
+#pragma clang diagnostic pop
 
 - (void)webView:(WebView *)webView      didParseSource:(NSString *)source
  baseLineNumber:(unsigned)lineNumber
