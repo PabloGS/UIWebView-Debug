@@ -8,6 +8,8 @@
 
 #ifdef DEBUG
 
+#import <objc/runtime.h>
+
 #import "WebView+Debug.h"
 
 @class WebView;
@@ -148,7 +150,9 @@
 
 - (void)webView:(id)sender didClearWindowObject:(id)windowObject 
 		forFrame:(WebFrame*)frame {
-    [sender setScriptDebugDelegate:[[ScriptDebuggerDelegate alloc] init]];
+    ScriptDebuggerDelegate* delegate = [[ScriptDebuggerDelegate alloc] init];
+    objc_setAssociatedObject(sender, @"ScriptDebuggerDelegate", delegate, OBJC_ASSOCIATION_RETAIN);
+    [sender setScriptDebugDelegate:delegate];
 }
 
 @end
