@@ -38,5 +38,6 @@
 #define kWillExecuteStatement   1
 #define kWillLeaveCallFrame     0
 
-#endif
++void enableRemoteWebInspector(void);
 
+#endif
